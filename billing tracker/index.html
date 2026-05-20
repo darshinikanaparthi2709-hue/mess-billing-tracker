@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sri Karthikeya Deluxe Mess — Billing Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<div class="bg-glow bg-glow-3"></div>
+
+<!-- ── INTRO SPLASH SCREEN ── -->
+<div class="intro-overlay" id="intro-screen">
+  <div class="intro-content">
+    <div class="intro-logo-container">
+      <div class="intro-logo-glow"></div>
+      <img class="intro-logo-img" src="logo.jpg" alt="Sri Karthikeya Deluxe Mess">
+    </div>
+    <h1 class="intro-title">Sri Karthikeya</h1>
+    <h2 class="intro-subtitle">Deluxe Mess</h2>
+    <div class="intro-divider"></div>
+    <p class="intro-tagline">Somajiguda, Hyderabad — 500082</p>
+    
+
+    
+    <button class="intro-btn" onclick="dismissIntro()">
+      Enter Billing Dashboard ➔
+    </button>
+  </div>
+</div>
+
+<!-- ── MOBILE HEADER (HIDDEN ON DESKTOP) ── -->
+<header class="mobile-header" style="display: none;">
+  <div class="mobile-brand">
+    <div class="mobile-brand-icon"><img class="brand-logo-img" src="logo.jpg" alt="Sri Karthikeya Deluxe Mess"></div>
+    <div class="mobile-brand-title">
+      <h1>Sri Karthikeya</h1>
+      <p>Deluxe Mess — Somajiguda</p>
+    </div>
+  </div>
+  <div class="sync-badge" style="font-size: 11px;">
+    <div class="sync-dot"></div>
+    SQL Connected
+  </div>
+</header>
+
+<!-- ── MOBILE BOTTOM NAVIGATION (HIDDEN ON DESKTOP) ── -->
+<nav class="mobile-nav" style="display: none;">
+  <div class="mobile-nav-item active" onclick="showPage('dashboard', this)">
+    <span class="icon">⬡</span>
+    <span>Dashboard</span>
+  </div>
+  <div class="mobile-nav-item" onclick="showPage('daily', this)">
+    <span class="icon">✎</span>
+    <span>Daily Entry</span>
+  </div>
+  <div class="mobile-nav-item" onclick="showPage('monthly', this)">
+    <span class="icon">📊</span>
+    <span>Monthly</span>
+  </div>
+  <div class="mobile-nav-item" onclick="showPage('companies', this)">
+    <span class="icon">🏢</span>
+    <span>Companies</span>
+  </div>
+  <div class="mobile-nav-item" onclick="showPage('setup', this)">
+    <span class="icon">⚙</span>
+    <span>Setup</span>
+  </div>
+</nav>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><img class="brand-logo-img" src="logo.jpg" alt="Sri Karthikeya Deluxe Mess"></div>
+      <h1>Sri Karthikeya<br>Deluxe Mess</h1>
+      <p>Somajiguda, Hyderabad — 500082</p>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-label">Navigation</div>
+      <div class="nav-item active" onclick="showPage('dashboard', this)">
+        <span class="icon">⬡</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('daily', this)">
+        <span class="icon">✎</span> Daily Entry
+        <span class="nav-badge" id="pending-badge">4</span>
+      </div>
+      <div class="nav-item" onclick="showPage('monthly', this)">
+        <span class="icon">📊</span> Monthly Report
+      </div>
+      <div class="nav-item" onclick="showPage('companies', this)">
+        <span class="icon">🏢</span> Companies
+      </div>
+      <div class="nav-item" onclick="showPage('setup', this)">
+        <span class="icon">⚙</span> Setup
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sync-badge">
+        <div class="sync-dot"></div>
+        Sheets synced
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Today's Summary</div>
+          <div class="page-subtitle" id="today-date-display"></div>
+        </div>
+        <div class="date-badge" id="date-badge-display"></div>
+      </div>
+
+      <div class="meal-alert">
+        <div class="meal-alert-icon">⭐</div>
+        <div class="meal-alert-text">
+          Default meal today: <strong id="default-meal-display">Egg Meals</strong> — each company can also have additional meal types.
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card tilt-card" id="card-egg">
+          <div class="stat-icon egg">🍳</div>
+          <div class="stat-value egg" id="dash-egg">0</div>
+          <div class="stat-label">Egg Plates</div>
+        </div>
+        <div class="stat-card tilt-card" id="card-veg">
+          <div class="stat-icon veg">🥗</div>
+          <div class="stat-value veg" id="dash-veg">0</div>
+          <div class="stat-label">Veg Plates</div>
+        </div>
+        <div class="stat-card tilt-card" id="card-chicken">
+          <div class="stat-icon chicken">🍗</div>
+          <div class="stat-value chicken" id="dash-chicken">0</div>
+          <div class="stat-label">Chicken Plates</div>
+        </div>
+        <div class="stat-card tilt-card" id="card-mutton">
+          <div class="stat-icon mutton">🐏</div>
+          <div class="stat-value mutton" id="dash-mutton">0</div>
+          <div class="stat-label">Mutton Plates</div>
+        </div>
+        <div class="stat-card tilt-card" id="card-total-plates">
+          <div class="stat-icon" style="background:rgba(201,168,76,0.12)">🍽️</div>
+          <div class="stat-value" id="dash-total-plates">0</div>
+          <div class="stat-label">Total Plates</div>
+        </div>
+        <div class="stat-card total tilt-card">
+          <div>
+            <div class="total-label">Today's Total Amount</div>
+            <div class="total-amount" id="dash-amount">₹0</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">COLLECTED TODAY</div>
+            <button class="btn btn-ghost" onclick="showPage('daily', document.querySelectorAll('.nav-item')[1])">
+              ✎ Add Entries
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Today's Entries</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>🍳 Egg</th>
+              <th>🥗 Veg</th>
+              <th>🍗 Chicken</th>
+              <th>🐏 Mutton</th>
+              <th>Total Plates</th>
+              <th>Amount (₹)</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ DAILY ENTRY ═══ -->
+    <div class="page" id="page-daily">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Daily Entry</div>
+          <div class="page-subtitle" style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+            <button class="btn btn-ghost" style="padding: 4px 10px;" onclick="prevDay()">← Prev</button>
+            <input type="date" id="daily-entry-date" class="meal-input" style="padding: 4px 10px; height: 32px; max-width: 160px; font-family: inherit; cursor: pointer; color: var(--text-primary); background: rgba(0,0,0,0.2);" onchange="onDateChange()">
+            <button class="btn btn-ghost" style="padding: 4px 10px;" onclick="nextDay()">Next →</button>
+          </div>
+          <div style="font-size: 13px; color: var(--text-dim); margin-top: 10px; padding-left: 2px;">
+            Prices: Egg ₹<span id="price-egg-display">120</span> · Veg ₹<span id="price-veg-display">120</span> · Chicken ₹<span id="price-chicken-display">160</span> · Mutton ₹<span id="price-mutton-display">275</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveAllEntries()">💾 Save All Entries</button>
+      </div>
+
+
+      <div class="entry-grid" id="entry-cards"></div>
+    </div>
+
+    <!-- ═══ MONTHLY REPORT ═══ -->
+    <div class="page" id="page-monthly">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Monthly Report</div>
+          <div class="page-subtitle" id="month-label">May 2026</div>
+        </div>
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-ghost" onclick="prevMonth()">← Prev</button>
+          <button class="btn btn-ghost" onclick="nextMonth()">Next →</button>
+          <button class="btn btn-primary">📥 Export</button>
+        </div>
+      </div>
+
+      <div class="report-grid">
+        <div class="report-card">
+          <div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em">Total Revenue</div>
+          <div class="big-num" style="color:var(--gold)" id="monthly-revenue">₹0</div>
+          <div class="sub">This Month</div>
+        </div>
+        <div class="report-card">
+          <div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em">Total Plates</div>
+          <div class="big-num" style="color:var(--text-primary)" id="monthly-plates">0</div>
+          <div class="sub">Served</div>
+        </div>
+        <div class="report-card">
+          <div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em">Avg per Day</div>
+          <div class="big-num" style="color:var(--veg)" id="monthly-avg">₹0</div>
+          <div class="sub">Daily Average</div>
+        </div>
+      </div>
+
+      <div class="section-title">Company-wise Breakdown</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>🍳 Egg</th>
+              <th>🥗 Veg</th>
+              <th>🍗 Chicken</th>
+              <th>🐏 Mutton</th>
+              <th>Total Plates</th>
+              <th>Amount (₹)</th>
+            </tr>
+          </thead>
+          <tbody id="monthly-table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Detailed Monthly Invoice</div>
+      <div class="setup-section" style="margin-top: 20px;">
+        <div class="invoice-controls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap;">
+          <div class="form-group" style="min-width: 250px;">
+            <label class="form-label">Select Company</label>
+            <select class="form-input" id="invoice-company-select" onchange="renderInvoice()"></select>
+          </div>
+          <button class="btn btn-primary" onclick="printInvoice()">🖨️ Print / Save PDF</button>
+        </div>
+        <div id="invoice-container"></div>
+      </div>
+    </div>
+
+    <!-- ═══ COMPANIES ═══ -->
+    <div class="page" id="page-companies">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Companies</div>
+          <div class="page-subtitle">Manage client companies</div>
+        </div>
+        <button class="btn btn-primary" onclick="showAddCompany()">+ Add Company</button>
+      </div>
+
+      <div class="companies-grid" id="companies-grid"></div>
+    </div>
+
+    <!-- ═══ SETUP ═══ -->
+    <div class="page" id="page-setup">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Setup</div>
+          <div class="page-subtitle">Configure mess billing preferences</div>
+        </div>
+        <button class="btn btn-primary" onclick="saveSetup()">💾 Save Settings</button>
+      </div>
+
+      <div class="setup-section">
+        <div class="setup-title">🍽️ Meal Pricing</div>
+        <div class="setup-row">
+          <div class="form-group">
+            <label class="form-label" style="color:var(--egg)">🍳 Egg Plate Price (₹)</label>
+            <input type="number" class="form-input" id="cfg-egg" value="120">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="color:var(--veg)">🥗 Veg Plate Price (₹)</label>
+            <input type="number" class="form-input" id="cfg-veg" value="120">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="color:var(--chicken)">🍗 Chicken Plate Price (₹)</label>
+            <input type="number" class="form-input" id="cfg-chicken" value="160">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="color:var(--mutton)">🐏 Mutton Plate Price (₹)</label>
+            <input type="number" class="form-input" id="cfg-mutton" value="275">
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <div class="setup-title">⚙️ Default Settings</div>
+        <div class="setup-row">
+          <div class="form-group">
+            <label class="form-label">Default Meal Type</label>
+            <select class="form-input" id="cfg-default-meal">
+              <option value="Egg Meals">Egg Meals</option>
+              <option value="Veg Meals">Veg Meals</option>
+              <option value="Chicken Meals">Chicken Meals</option>
+              <option value="Mutton">Mutton</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mess Name</label>
+            <input type="text" class="form-input" id="cfg-name" value="Sri Karthikeya Deluxe Mess">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-input" id="cfg-loc" value="Somajiguda, Hyderabad — 500082">
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <div class="setup-title">🏢 Add New Company</div>
+        <div class="setup-row">
+          <div class="form-group" style="grid-column:span 2">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-input" id="new-company-name" placeholder="e.g. XYZ Technologies Pvt. Ltd.">
+          </div>
+          <div class="form-group">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-primary" onclick="addCompanyFromSetup()" style="width:100%;justify-content:center">+ Add Company</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="script.js?v=2"></script>
+</body>
+</html>
